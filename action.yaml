@@ -20,6 +20,32 @@ runs:
         repository: RebelToolbox/RebelEngine
         path: RebelEngine
 
+    - name: Install dependencies
+      shell: bash
+      run: |
+        #Install dependencies
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          echo "::group::Installing Linux dependencies"
+          sudo apt-get update
+          sudo apt-get install -y \
+          build-essential         \
+          pkg-config              \
+          clang                   \
+          lld                     \
+          scons                   \
+          libx11-dev              \
+          libxcursor-dev          \
+          libxinerama-dev         \
+          libxrandr-dev           \
+          libxi-dev               \
+          libgl-dev               \
+          libudev-dev             \
+          libasound2-dev          \
+          libpulse-dev            \
+          yasm
+          echo "::endgroup::"
+        fi
+
     - name: Set SCons Cache Environment Variable
       shell: bash
       run: echo "SCONS_CACHE=.scons-cache/" >> $GITHUB_ENV
@@ -32,37 +58,12 @@ runs:
         restore-keys: |
           ${{ github.job }}-${{ strategy.job-index }}-
 
-    - name: Install dependencies
-      shell: bash
-      run: |
-        #Install dependencies
-        echo "::group::Install dependencies"
-        sudo apt-get update
-        sudo apt-get install -y \
-        build-essential \
-        pkg-config \
-        clang \
-        lld \
-        python3 \
-        scons \
-        libx11-dev \
-        libxcursor-dev \
-        libxinerama-dev \
-        libxrandr-dev \
-        libxi-dev \
-        libgl-dev \
-        libudev-dev \
-        libasound2-dev \
-        libpulse-dev \
-        yasm
-        echo "::endgroup::"
-
     - name: Build Rebel
       shell: bash
       working-directory: RebelEngine
       run: |
         #Build Rebel
-        echo "::group::Build Rebel"
+        echo "::group::Building Rebel"
         scons -j2 ${{ inputs.build-options }}
         echo "::endgroup::"
 
