@@ -1,0 +1,32 @@
+name: Build Tests
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-tests:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Build Linux Rebel Editor
+            os: ubuntu-latest
+            artifact: linux-editor
+            build-options: production=yes target=release_debug
+            rebel-executable: rebel.x11.opt.tools.64
+
+    steps:
+      - name: Checkout Rebel Build Action
+        uses: actions/checkout@v3
+
+      - name: Build Rebel
+        uses: ./
+        with:
+          artifact: ${{ matrix.artifact }}
+          build-options: ${{ matrix.build-options }}
+          rebel-executable: ${{ matrix.rebel-executable }}
