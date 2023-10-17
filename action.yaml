@@ -32,6 +32,8 @@ runs:
           pkg-config              \
           clang                   \
           lld                     \
+          mingw-w64               \
+          emscripten              \
           scons                   \
           libx11-dev              \
           libxcursor-dev          \
@@ -42,6 +44,21 @@ runs:
           libudev-dev             \
           libasound2-dev          \
           libpulse-dev            \
+          yasm
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+          echo "::endgroup::"
+        fi
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          echo "::group::Installing Windows dependencies"
+          python -m ensurepip --upgrade
+          python -m pip install scons
+          echo "::endgroup::"
+        fi
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          echo "::group::Installing macOS dependencies"
+          brew update
+          brew install \
+          scons        \
           yasm
           echo "::endgroup::"
         fi
