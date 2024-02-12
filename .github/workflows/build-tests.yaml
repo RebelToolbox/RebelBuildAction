@@ -43,6 +43,24 @@ jobs:
             build-options: production=yes target=release_debug
             rebel-executable: rebel.osx.opt.tools.64
 
+          - name: Build Android Rebel Engine Library
+            os: ubuntu-latest
+            artifact: android-engine-library-arm64
+            build-options: platform=android production=yes tools=no target=release
+            rebel-executable: librebel.android.opt.armv8.so
+
+          - name: Build iOS Rebel Engine Library
+            os: macOS-latest
+            artifact: ios-engine-library-arm64
+            build-options: platform=iphone production=yes tools=no target=release
+            rebel-executable: librebel.iphone.opt.arm64.a
+
+          - name: Build Web Rebel Engine
+            os: ubuntu-latest
+            artifact: web-engine
+            build-options: platform=javascript production=yes tools=no target=release
+            rebel-executable: rebel.javascript.opt.zip
+
     steps:
       - name: Checkout Rebel Build Action
         uses: actions/checkout@v4
