@@ -5,6 +5,10 @@ inputs:
     description: Name of the artifact to be uploaded
   build-options:
     description: SCons build options
+  use-build-cache:
+    description: Use a build cache to make subsequent builds faster
+    type: boolean
+    default: true
   rebel-executable:
     # TODO: Replace with an output.
     # This input should not be needed.
@@ -64,10 +68,12 @@ runs:
         fi
 
     - name: Set SCons Cache Environment Variable
+      if: inputs.use-build-cache == 'true'
       shell: bash
       run: echo "SCONS_CACHE=.scons-cache/" >> $GITHUB_ENV
 
     - name: Setup SCons cache
+      if: inputs.use-build-cache == 'true'
       uses: actions/cache@v4
       with:
         path: RebelEngine/${{ env.SCONS_CACHE }}
