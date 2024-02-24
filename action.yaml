@@ -100,6 +100,8 @@ runs:
         echo "::group::Building Rebel"
         scons -j2 ${{ inputs.build-options }}
         echo "::endgroup::"
+        echo "Build files:"
+        ls -1 bin
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
