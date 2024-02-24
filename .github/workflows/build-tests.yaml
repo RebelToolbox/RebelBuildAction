@@ -19,6 +19,12 @@ jobs:
             build-options: production=yes target=release_debug
             rebel-executable: rebel.x11.opt.tools.64
 
+          - name: Build Linux Rebel Engine 32 bit
+            os: ubuntu-latest
+            artifact: linux-engine-x86-32
+            build-options: production=yes tools=no target=release bits=32
+            rebel-executable: rebel.x11.opt.32
+
           - name: Build Windows Rebel Editor on Linux
             os: ubuntu-latest
             artifact: windows-editor-mingw-linux
