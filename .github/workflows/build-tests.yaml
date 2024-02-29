@@ -1,7 +1,5 @@
 name: Build Tests
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -12,6 +10,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: Build Linux Rebel Editor
@@ -19,6 +18,54 @@ jobs:
             artifact: linux-editor
             build-options: production=yes target=release_debug
             rebel-executable: rebel.x11.opt.tools.64
+
+          - name: Build Linux Rebel Engine 32 bit
+            os: ubuntu-latest
+            artifact: linux-engine-x86-32
+            build-options: production=yes tools=no target=release bits=32
+            rebel-executable: rebel.x11.opt.32
+
+          - name: Build Windows Rebel Editor on Linux
+            os: ubuntu-latest
+            artifact: windows-editor-mingw-linux
+            build-options: platform=windows production=yes target=release_debug
+            rebel-executable: rebel.windows.opt.tools.64.mingw.exe
+
+          - name: Build Windows Rebel Editor using MSVC
+            os: windows-latest
+            artifact: windows-editor-msvc
+            build-options: production=yes target=release_debug
+            rebel-executable: rebel.windows.opt.tools.64.msvc.exe
+
+          - name: Build Windows Rebel Editor using MinGW
+            os: windows-latest
+            artifact: windows-editor-mingw
+            build-options: production=yes target=release_debug use_mingw=yes
+            rebel-executable: rebel.windows.opt.tools.64.mingw.exe
+
+          - name: Build macOS Rebel Editor
+            os: macOS-latest
+            artifact: macos-editor
+            build-options: production=yes target=release_debug
+            rebel-executable: rebel.osx.opt.tools.64
+
+          - name: Build Android Rebel Engine Library
+            os: ubuntu-latest
+            artifact: android-engine-library-arm64
+            build-options: platform=android production=yes tools=no target=release
+            rebel-executable: librebel.android.opt.armv8.so
+
+          - name: Build iOS Rebel Engine Library
+            os: macOS-latest
+            artifact: ios-engine-library-arm64
+            build-options: platform=iphone production=yes tools=no target=release
+            rebel-executable: librebel.iphone.opt.arm64.a
+
+          - name: Build Web Rebel Engine
+            os: ubuntu-latest
+            artifact: web-engine
+            build-options: platform=javascript production=yes tools=no target=release
+            rebel-executable: rebel.javascript.opt.zip
 
     steps:
       - name: Checkout Rebel Build Action

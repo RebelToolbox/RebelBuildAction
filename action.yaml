@@ -5,6 +5,10 @@ inputs:
     description: Name of the artifact to be uploaded
   build-options:
     description: SCons build options
+  use-build-cache:
+    description: Use a build cache to make subsequent builds faster
+    type: boolean
+    default: true
   rebel-executable:
     # TODO: Replace with an output.
     # This input should not be needed.
@@ -20,11 +24,67 @@ runs:
         repository: RebelToolbox/RebelEngine
         path: RebelEngine
 
+    - name: Install dependencies
+      shell: bash
+      run: |
+        #Install dependencies
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          echo "::group::Installing Linux dependencies"
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y \
+          build-essential         \
+          g++-multilib            \
+          pkg-config              \
+          clang                   \
+          lld                     \
+          mingw-w64               \
+          emscripten              \
+          scons                   \
+          libx11-dev              \
+          libxcursor-dev          \
+          libxinerama-dev         \
+          libxrandr-dev           \
+          libxi-dev               \
+          libgl-dev               \
+          libudev-dev             \
+          libasound2-dev          \
+          libpulse-dev            \
+          libx11-dev:i386         \
+          libxcursor-dev:i386     \
+          libxinerama-dev:i386    \
+          libxrandr-dev:i386      \
+          libxi-dev:i386          \
+          libgl-dev:i386          \
+          libudev-dev:i386        \
+          libasound2-dev:i386     \
+          libpulse-dev:i386       \
+          yasm
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+          echo "::endgroup::"
+        fi
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          echo "::group::Installing Windows dependencies"
+          python -m ensurepip --upgrade
+          python -m pip install scons
+          echo "::endgroup::"
+        fi
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          echo "::group::Installing macOS dependencies"
+          brew update
+          brew install \
+          scons        \
+          yasm
+          echo "::endgroup::"
+        fi
+
     - name: Set SCons Cache Environment Variable
+      if: inputs.use-build-cache == 'true'
       shell: bash
       run: echo "SCONS_CACHE=.scons-cache/" >> $GITHUB_ENV
 
     - name: Setup SCons cache
+      if: inputs.use-build-cache == 'true'
       uses: actions/cache@v4
       with:
         path: RebelEngine/${{ env.SCONS_CACHE }}
@@ -32,39 +92,16 @@ runs:
         restore-keys: |
           ${{ github.job }}-${{ strategy.job-index }}-
 
-    - name: Install dependencies
-      shell: bash
-      run: |
-        #Install dependencies
-        echo "::group::Install dependencies"
-        sudo apt-get update
-        sudo apt-get install -y \
-        build-essential \
-        pkg-config \
-        clang \
-        lld \
-        python3 \
-        scons \
-        libx11-dev \
-        libxcursor-dev \
-        libxinerama-dev \
-        libxrandr-dev \
-        libxi-dev \
-        libgl-dev \
-        libudev-dev \
-        libasound2-dev \
-        libpulse-dev \
-        yasm
-        echo "::endgroup::"
-
     - name: Build Rebel
       shell: bash
       working-directory: RebelEngine
       run: |
         #Build Rebel
-        echo "::group::Build Rebel"
+        echo "::group::Building Rebel"
         scons -j2 ${{ inputs.build-options }}
         echo "::endgroup::"
+        echo "Build files:"
+        ls -1 bin
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
