@@ -71,9 +71,10 @@ runs:
         fi
         if [[ "${{ runner.os }}" == "macOS" ]]; then
           echo "::group::Installing macOS dependencies"
+          python -m ensurepip --upgrade
+          python -m pip install scons
           brew update
           brew install \
-          scons        \
           yasm
           echo "::endgroup::"
         fi
