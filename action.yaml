@@ -30,11 +30,9 @@ runs:
         #Install dependencies
         if [[ "${{ runner.os }}" == "Linux" ]]; then
           echo "::group::Installing Linux dependencies"
-          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y \
           build-essential         \
-          g++-multilib            \
           pkg-config              \
           clang                   \
           lld                     \
@@ -50,15 +48,6 @@ runs:
           libudev-dev             \
           libasound2-dev          \
           libpulse-dev            \
-          libx11-dev:i386         \
-          libxcursor-dev:i386     \
-          libxinerama-dev:i386    \
-          libxrandr-dev:i386      \
-          libxi-dev:i386          \
-          libgl-dev:i386          \
-          libudev-dev:i386        \
-          libasound2-dev:i386     \
-          libpulse-dev:i386       \
           yasm
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
           echo "::endgroup::"
