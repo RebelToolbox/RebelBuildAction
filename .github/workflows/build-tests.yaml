@@ -17,7 +17,7 @@ jobs:
             os: ubuntu-latest
             artifact: linux-editor
             build-options: production=yes target=release_debug
-            rebel-executable: rebel.x11.opt.tools.64
+            rebel-executable: rebel.linux.opt.tools.64
 
           - name: Build Linux Rebel Engine 32 bit
             os: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
             os: macOS-latest
             artifact: macos-editor
             build-options: production=yes target=release_debug
-            rebel-executable: rebel.osx.opt.tools.64
+            rebel-executable: rebel.macos.opt.tools.64
 
           - name: Build Android Rebel Engine Library
             os: ubuntu-latest
@@ -58,14 +58,14 @@ jobs:
           - name: Build iOS Rebel Engine Library
             os: macOS-latest
             artifact: ios-engine-library-arm64
-            build-options: platform=iphone production=yes tools=no target=release
-            rebel-executable: librebel.iphone.opt.arm64.a
+            build-options: platform=ios production=yes tools=no target=release
+            rebel-executable: librebel.ios.opt.arm64.a
 
           - name: Build Web Rebel Engine
             os: ubuntu-latest
             artifact: web-engine
-            build-options: platform=javascript production=yes tools=no target=release
-            rebel-executable: rebel.javascript.opt.zip
+            build-options: platform=web production=yes tools=no target=release
+            rebel-executable: rebel.web.opt.zip
 
     steps:
       - name: Checkout Rebel Build Action
