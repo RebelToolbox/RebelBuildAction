@@ -6,8 +6,9 @@ This Action provides a standardised way for building Rebel Engine and Rebel Edit
 
 ## Usage
 
+### Inputs
 ```
-- uses: RebelToolbox/RebelBuildAction@v3
+- uses: RebelToolbox/RebelBuildAction@v4
   with:
     # Name of the artifact to be uploaded
     artifact:
@@ -19,7 +20,9 @@ This Action provides a standardised way for building Rebel Engine and Rebel Edit
     # Type: boolean
     # Default: true
     use-build-cache: true
-
-    # Filename of the binary that will be built
-    rebel-executable:
 ```
+
+### Outputs
+| Name | Description |
+| - | - |
+| `build-filename` | The filename of the executable or library created by building Rebel with the specified build options. |
