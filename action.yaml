@@ -9,11 +9,10 @@ inputs:
     description: Use a build cache to make subsequent builds faster
     type: boolean
     default: true
-  rebel-executable:
-    # TODO: Replace with an output.
-    # This input should not be needed.
-    # We should be able to determine this, and return it to the caller.
-    description: Filename of the binary that will be built
+outputs:
+  build-filename:
+    description: Filename of the binary that was built
+    value: ${{ steps.get-build-filename.outputs.filename }}
 
 runs:
   using: composite
@@ -71,7 +70,9 @@ runs:
     - name: Set SCons Cache Environment Variable
       if: inputs.use-build-cache == 'true'
       shell: bash
-      run: echo "SCONS_CACHE=.scons-cache/" >> $GITHUB_ENV
+      run: |
+        #Set SCons Cache Environment Variable
+        echo "SCONS_CACHE=.scons-cache/" >> $GITHUB_ENV
 
     - name: Setup SCons cache
       if: inputs.use-build-cache == 'true'
@@ -90,12 +91,39 @@ runs:
         echo "::group::Building Rebel"
         scons -j2 ${{ inputs.build-options }}
         echo "::endgroup::"
-        echo "Build files:"
-        ls -1 bin
+
+    - name: Get build filename
+      id: get-build-filename
+      shell: bash
+      working-directory: RebelEngine/bin
+      run: |
+        #Get build filename
+        echo "::group::Getting build filename"
+        for file in *; do
+          if [ -f "$file" ]; then
+            if [[ $file == "rebel.windows"* ]]; then
+              # Visual Studio creates additional files to support cross-linking
+              if [[ $file != *".exe" ]]; then
+                echo "Ignoring: $file"
+                continue
+              fi
+            fi
+            if [[ $file == "rebel.web"* ]]; then
+              # Web builds contain multiple files that are put in the .zip file
+              if [[ $file != *".zip" ]]; then
+                echo "Ignoring: $file"
+                continue
+              fi
+            fi
+            echo "Build filename: $file"
+            echo "filename=$file" >> $GITHUB_OUTPUT
+          fi
+        done
+        echo "::endgroup::"
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact }}
-        path: RebelEngine/bin/${{ inputs.rebel-executable }}
+        path: RebelEngine/bin/
         retention-days: 1
