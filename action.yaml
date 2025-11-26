@@ -2,16 +2,23 @@ name: Build Rebel
 
 inputs:
   artifact:
-    description: Name of the artifact to be uploaded
+    description: Name of the artifact to be uploaded.
   build-options:
-    description: SCons build options
+    description: SCons build options.
   use-build-cache:
-    description: Use a build cache to make subsequent builds faster
+    description: Use a build cache to make subsequent builds faster.
     type: boolean
     default: true
+  repository:
+    description: The repository name with owner containing Rebel Engine.
+    default: 'RebelToolbox/RebelEngine'
+  ref:
+    description: The branch, tag or SHA to checkout.
+    default: ''
+
 outputs:
   build-filename:
-    description: Filename of the binary that was built
+    description: Filename of the binary that was built.
     value: ${{ steps.get-build-filename.outputs.filename }}
 
 runs:
@@ -20,7 +27,8 @@ runs:
     - name: Checkout Rebel Engine
       uses: actions/checkout@v6
       with:
-        repository: RebelToolbox/RebelEngine
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
         path: RebelEngine
 
     - name: Install dependencies
