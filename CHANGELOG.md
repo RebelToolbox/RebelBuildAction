@@ -1,5 +1,9 @@
 # Change Log
 
+## v4.1
+  - Allow specifying the respository and branch, tag or SHA to use (https://github.com/RebelToolbox/RebelBuildAction/pull/15)
+  - Enable Dependabot version updates (https://github.com/RebelToolbox/RebelBuildAction/pull/8)
+
 ## v4.0
 
   - Return the Rebel build filename as the `build-filename` output (https://github.com/RebelToolbox/RebelBuildAction/pull/7)
