@@ -44,7 +44,6 @@ runs:
           clang                   \
           lld                     \
           mingw-w64               \
-          emscripten              \
           scons                   \
           libx11-dev              \
           libxcursor-dev          \
