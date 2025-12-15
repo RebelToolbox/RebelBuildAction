@@ -84,7 +84,7 @@ runs:
 
     - name: Setup SCons cache
       if: inputs.use-build-cache == 'true'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: RebelEngine/${{ env.SCONS_CACHE }}
         key: ${{ github.job }}-${{ strategy.job-index }}-${{ github.sha }}
