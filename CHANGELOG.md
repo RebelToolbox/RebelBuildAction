@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.2
+  - Remove Linux' emscripten dependency (https://github.com/RebelToolbox/RebelBuildAction/pull/17)
+
 ## v4.1
   - Allow specifying the respository and branch, tag or SHA to use (https://github.com/RebelToolbox/RebelBuildAction/pull/15)
   - Enable Dependabot version updates (https://github.com/RebelToolbox/RebelBuildAction/pull/8)
