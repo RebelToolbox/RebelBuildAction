@@ -25,7 +25,7 @@ runs:
   using: composite
   steps:
     - name: Checkout Rebel Engine
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ inputs.ref }}
