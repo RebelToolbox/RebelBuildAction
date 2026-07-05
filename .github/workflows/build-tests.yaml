@@ -24,7 +24,7 @@ jobs:
             build-options: platform=windows production=yes target=release_debug
 
           - name: Build Windows Rebel Editor using MSVC
-            os: windows-latest
+            os: windows-2022
             artifact: windows-editor-msvc
             build-options: production=yes target=release_debug
 
@@ -34,7 +34,7 @@ jobs:
             build-options: production=yes target=release_debug use_mingw=yes
 
           - name: Build macOS Rebel Editor
-            os: macOS-latest
+            os: macos-15
             artifact: macos-editor
             build-options: production=yes target=release_debug
 
